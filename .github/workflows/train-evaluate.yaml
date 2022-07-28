@@ -17,9 +17,6 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --upgrade poetry
           poetry install
-      - name: Ensure all pre-commit hooks pass
-        run: |
-          poetry run pre-commit run --all-files
       - name: Train model
         run: |
           echo Training model ....
