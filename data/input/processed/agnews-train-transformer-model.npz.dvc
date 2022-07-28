@@ -1,0 +1,4 @@
+outs:
+- md5: 593ebeafbba43c624daf2ea71fa9c053
+  size: 70694670
+  path: agnews-train-transformer-model.npz

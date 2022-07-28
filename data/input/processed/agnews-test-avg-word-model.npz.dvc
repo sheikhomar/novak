@@ -1,0 +1,4 @@
+outs:
+- md5: b20b3d0b51603de80eaa08c631b96af0
+  size: 21662410
+  path: agnews-test-avg-word-model.npz

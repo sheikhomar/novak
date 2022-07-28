@@ -1,0 +1,4 @@
+outs:
+- md5: 73e1cbb9f3feba310a3ba31eca1d292b
+  size: 9225430
+  path: agnews-train-avg-word-model.npz

@@ -1,0 +1,4 @@
+outs:
+- md5: f0ba129837a55d8445ef909ae06f58ff
+  size: 424251451
+  path: agnews-augment-transformer-model.npz

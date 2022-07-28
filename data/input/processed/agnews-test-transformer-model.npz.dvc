@@ -1,0 +1,4 @@
+outs:
+- md5: b5da436e5699d1380c0fe56f410fd8ee
+  size: 141443887
+  path: agnews-test-transformer-model.npz
