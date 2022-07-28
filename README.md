@@ -17,6 +17,7 @@ News categorization.
    ```
 
 3. Install [Poetry](https://python-poetry.org/docs/).
+
    ```bash
    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
    source $HOME/.poetry/env
@@ -34,3 +35,11 @@ News categorization.
    ```bash
    poetry run pre-commit install
    ```
+
+## Preparing AG News data
+
+```bash
+poetry run python -m app.data.prep_agnews \
+   --download-url https://corise-mlops.s3.us-west-2.amazonaws.com/project1/agnews.zip \
+   --output-dir data/input
+```
