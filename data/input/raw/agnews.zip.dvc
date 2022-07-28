@@ -1,0 +1,4 @@
+outs:
+- md5: d85d356afaa006beff279b9d2df558ca
+  size: 33321490
+  path: agnews.zip

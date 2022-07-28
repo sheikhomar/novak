@@ -28,6 +28,7 @@ flake8-docstrings = "^1.6.0"
 darglint = "^1.8.1"
 black = "^22.6.0"
 dvc = "^2.15.0"
+PyDrive2 = "^1.14.0"
 
 [tool.black]
 line-length = 88
