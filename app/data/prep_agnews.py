@@ -19,6 +19,7 @@ class TransformerFeaturizer(BaseEstimator, TransformerMixin):
         self,
         model_name: str = "sentence-transformers/all-mpnet-base-v2",
     ):
+        self._model_name = model_name
         self._model = SentenceTransformer(model_name)
 
     def fit(self, X, y=None):
