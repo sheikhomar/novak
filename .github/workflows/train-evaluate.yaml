@@ -1,12 +1,25 @@
 name: train-evaluate
 on: [push]
 jobs:
+
   run:
     runs-on: ubuntu-latest
     container: docker://ghcr.io/iterative/cml:0-dvc2-base1
     steps:
       - uses: iterative/setup-cml@v1
       - uses: actions/checkout@v3
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: Install Poetry & Libraries
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade poetry
+          poetry install
+      - name: Ensure all pre-commit hooks pass
+        run: |
+          poetry run pre-commit run --all-files
       - name: Train model
         run: |
           echo Training model ....
