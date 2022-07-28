@@ -39,6 +39,10 @@ News categorization.
 ## Preparing AG News data
 
 ```bash
+# Download data from the DVC remote
+poetry run dvc pull data/input/raw/agnews.zip
+
+# Prepare the raw data
 poetry run python -m app.data.prep_agnews \
    --download-url https://corise-mlops.s3.us-west-2.amazonaws.com/project1/agnews.zip \
    --output-dir data/input
