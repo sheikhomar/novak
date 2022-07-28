@@ -1,0 +1,20 @@
+name: train-evaluate
+on: [push]
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    container: docker://ghcr.io/iterative/cml:0-dvc2-base1
+    steps:
+      - uses: iterative/setup-cml@v1
+      - uses: actions/checkout@v3
+      - name: Train model
+        run: |
+          echo Hello World!
+      - name: Create CML report
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Post reports as comments in GitHub PRs
+          echo "# Report" >> report.md
+          echo "## Results" >> report.md
+          cml send-comment report.md
