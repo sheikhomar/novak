@@ -16,6 +16,13 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --upgrade poetry
           poetry install
+      - name: Fetch data from DVC.
+        env:
+          GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
+        run: |
+          poetry run dvc pull
+          ls -lh data/input/raw
+          ls -lh data/input/processed
       - name: Train model
         run: |
           echo Training model ....
