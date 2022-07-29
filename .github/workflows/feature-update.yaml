@@ -27,28 +27,36 @@ jobs:
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git status
       - name: Setup python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.8.13"
       - name: Load cached virtual environment
         id: cached-poetry-dependencies
         uses: actions/cache@v3
         with:
-          path: $HOME/.cache/pypoetry/virtualenvs
-          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('.github/workflows/update-features.yaml') }}
+          path: .venv
+          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+      - name: Load cached gensim data
+        id: cached-gensim-data
+        uses: actions/cache@v3
+        with:
+          path: ~/gensim-data
+          key: gensim-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
       - name: Install Poetry
         uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
       - name: Install libraries
         run: |
-          poetry install
+          poetry install --no-interaction --no-root
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
       - name: Fetch data from DVC.
         env:
           GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
         run: |
           echo 'Downloading raw data'
-          poetry run dvc pull data/input/raw/agnews.zip
-          poetry run dvc pull ${{ env.processed_features_path }}
+          poetry run dvc pull
           ls -lh data/input/raw
           ls -lh data/input/processed
       - name: Update features
@@ -59,7 +67,12 @@ jobs:
           rm ${{ env.processed_features_path }}
           poetry run python -m app.data.prep_agnews
           poetry run dvc add ${{ env.processed_features_path }}
+      - name: Check for changes
+        run: |
+          git status --porcelain
+          echo "git_status_content=$(git status --porcelain)" >> $GITHUB_ENV
       - name: Update DVC files in Git and DVC
+        if: env.git_status_content != ''
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
