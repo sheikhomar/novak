@@ -32,8 +32,12 @@ jobs:
         run: |
           # Post reports as comments in GitHub PRs
           echo "# Results" >> report.md
+          echo '' >> report.md
           echo "## Classification Report" >> report.md
           cat data/output/classification_report.md >> report.md
+          echo '' >> report.md
           echo "## Confusion Matrix" >> report.md
           cml-publish data/output/confusion_matrix.png --md >> report.md
+          echo '' >> report.md
+          cat report.md
           cml send-comment report.md
