@@ -56,8 +56,7 @@ jobs:
           GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
         run: |
           echo 'Downloading raw data'
-          poetry run dvc pull data/input/raw/agnews.zip
-          poetry run dvc pull ${{ env.processed_features_path }}
+          poetry run dvc pull
           ls -lh data/input/raw
           ls -lh data/input/processed
       - name: Update features
