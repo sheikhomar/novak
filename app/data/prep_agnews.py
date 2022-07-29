@@ -101,12 +101,13 @@ class DataPreparation:
             featurizer_init_fn=AverageWordVectorFeaturizer,
         )
 
-        self._process_features_and_labels(
-            docs_map=docs_map,
-            labels_map=labels_map,
-            featurizer_name="transformer-model",
-            featurizer_init_fn=TransformerFeaturizer,
-        )
+        # TODO: Make this configurable
+        # self._process_features_and_labels(
+        #     docs_map=docs_map,
+        #     labels_map=labels_map,
+        #     featurizer_name="transformer-model",
+        #     featurizer_init_fn=TransformerFeaturizer,
+        # )
 
     def _process_features_and_labels(
         self,
