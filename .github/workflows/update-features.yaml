@@ -1,5 +1,11 @@
 name: update-features
 on:
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: "Run? (Optional)"
+        required: false
+        type: boolean
   push:
     branches:
       - main
