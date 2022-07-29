@@ -35,7 +35,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.HOME }}/.cache/pypoetry/virtualenvs
-          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('.github/workflows/feature-update.yaml') }}
+          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
       - name: Load cached gensim data
         id: cached-gensim-data
         uses: actions/cache@v3
