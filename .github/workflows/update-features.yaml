@@ -2,21 +2,21 @@ name: update-features
 on:
   workflow_dispatch:
     inputs:
-      tags:
-        description: "Run? (Optional)"
-        required: false
-        type: boolean
-  push:
-    branches:
-      - main
-      - feature-flow
-    paths:
-      - app/data/prep_agnews.py
-      - .github/workflows/update-features.yaml
+      split_name:
+        description: "Select the data split to generate features for."
+        required: true
+        default: "train"
+        type: choice
+        options:
+          - train
+          - test
+          - augment
 jobs:
   run:
     runs-on: ubuntu-latest
     container: docker://ghcr.io/iterative/cml:0-dvc2-base1
+    env:
+      processed_features_path: data/input/processed/agnews-${{ inputs.split_name }}-avg-word-model.npz
     steps:
       - uses: iterative/setup-cml@v1
       - uses: actions/checkout@v3
@@ -34,7 +34,7 @@ jobs:
         id: cached-poetry-dependencies
         uses: actions/cache@v3
         with:
-          path: .venv
+          path: $HOME/.cache/pypoetry/virtualenvs
           key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('.github/workflows/update-features.yaml') }}
       - name: Install Poetry
         uses: snok/install-poetry@v1
@@ -47,16 +47,18 @@ jobs:
           GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
         run: |
           echo 'Downloading raw data'
-          poetry run dvc pull
+          poetry run dvc pull data/input/raw/agnews.zip
+          poetry run dvc pull ${{ env.processed_features_path }}
           ls -lh data/input/raw
           ls -lh data/input/processed
       - name: Update features
         env:
           GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
         run: |
-          poetry run dvc unprotect data/input/processed/*.npz
+          poetry run dvc unprotect ${{ env.processed_features_path }}
+          rm ${{ env.processed_features_path }}
           poetry run python -m app.data.prep_agnews
-          poetry run dvc add data/input/processed/*.npz
+          poetry run dvc add ${{ env.processed_features_path }}
       - name: Update DVC files in Git and DVC
         run: |
           git config user.name "GitHub Actions Bot"
