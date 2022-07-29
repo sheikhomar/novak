@@ -34,7 +34,7 @@ jobs:
         id: cached-poetry-dependencies
         uses: actions/cache@v3
         with:
-          path: workflow/.venv
+          path: .venv
           key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('.github/workflows/update-features.yaml') }}
       - name: Install Poetry
         uses: snok/install-poetry@v1
@@ -47,18 +47,21 @@ jobs:
           GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
         run: |
           echo 'Downloading raw data'
-          poetry run dvc pull data/input/raw/agnews.zip
+          poetry run dvc pull
           ls -lh data/input/raw
+          ls -lh data/input/processed
       - name: Update features
         env:
           GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
         run: |
+          poetry run dvc unprotect data/input/processed/*.npz
           poetry run python -m app.data.prep_agnews
           poetry run dvc add data/input/processed/*.npz
       - name: Update DVC files in Git and DVC
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
+          git status
           git add .
           git commit -m "Modified processed data." -m "Initiated by commit ${{ github.sha }}"
           git push origin main
