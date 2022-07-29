@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       split_name:
-        description: "Select the data split to generate features for."
+        description: "Select the data split to generate features."
         required: true
         default: "train"
         type: choice
