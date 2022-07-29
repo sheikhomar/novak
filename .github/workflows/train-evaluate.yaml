@@ -7,14 +7,37 @@ jobs:
     steps:
       - uses: iterative/setup-cml@v1
       - uses: actions/checkout@v3
-      - name: Train model
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8.13"
+      - name: Install Poetry & Libraries
         run: |
-          echo Hello World!
-      - name: Create CML report
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade poetry
+          poetry install
+      - name: Fetch data from DVC.
+        env:
+          GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
+        run: |
+          poetry run dvc pull
+          ls -lh data/input/raw
+          ls -lh data/input/processed
+      - name: Train and evaluate model
+        run: |
+          poetry run python -m app.evaluation.eval_lr
+      - name: Create report
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Post reports as comments in GitHub PRs
-          echo "# Report" >> report.md
-          echo "## Results" >> report.md
+          echo "# Results" >> report.md
+          echo '' >> report.md
+          echo "## Classification Report" >> report.md
+          cat data/output/classification_report.md >> report.md
+          echo '' >> report.md
+          echo "## Confusion Matrix" >> report.md
+          cml-publish data/output/confusion_matrix.png --md >> report.md
+          echo '' >> report.md
+          cat report.md
           cml send-comment report.md

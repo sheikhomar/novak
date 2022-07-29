@@ -36,6 +36,14 @@ News categorization.
    poetry run pre-commit install
    ```
 
+6. Configure Google Drive Remote in DVC using [Google Service Account credentials](https://dvc.org/doc/user-guide/setup-google-drive-remote#using-service-accounts):
+
+   ```bash
+   # Download and copy credentials file to .dvc/tmp/gdrive-user-credentials.json
+   poetry run dvc remote modify gdrive-remote \
+      --local gdrive_service_account_json_file_path .dvc/tmp/gdrive-user-credentials.json
+   ```
+
 ## Preparing AG News data
 
 ```bash

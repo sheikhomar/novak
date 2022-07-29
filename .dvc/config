@@ -2,3 +2,4 @@
     remote = gdrive-remote
 ['remote "gdrive-remote"']
     url = gdrive://18w3ibQMjwc_HKviJvtxehbKsPeaYCmoe
+    gdrive_use_service_account = true
