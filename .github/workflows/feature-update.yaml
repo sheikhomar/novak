@@ -59,7 +59,12 @@ jobs:
           rm ${{ env.processed_features_path }}
           poetry run python -m app.data.prep_agnews
           poetry run dvc add ${{ env.processed_features_path }}
+      - name: Check for changes
+        run: |
+          git status --porcelain
+          echo "git_status_content=$(git status --porcelain)" >> $GITHUB_ENV
       - name: Update DVC files in Git and DVC
+        if: env.git_status_content != ''
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
