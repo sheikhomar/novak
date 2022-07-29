@@ -146,3 +146,4 @@ cython_debug/
 # Data
 dask-worker-space*
 data/experiments*
+data/output
