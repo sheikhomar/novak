@@ -12,6 +12,7 @@ on:
       - feature-flow
     paths:
       - app/data/prep_agnews.py
+      - .github/workflows/update-features.yaml
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -19,6 +20,9 @@ jobs:
     steps:
       - uses: iterative/setup-cml@v1
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - run: git status
       - name: Setup python
         uses: actions/setup-python@v2
         with:
