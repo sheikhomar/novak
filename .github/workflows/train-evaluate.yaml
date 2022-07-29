@@ -20,18 +20,20 @@ jobs:
         env:
           GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
         run: |
-          poetry run dvc doctor
-          poetry run dvc pull -v
+          poetry run dvc pull
           ls -lh data/input/raw
           ls -lh data/input/processed
-      - name: Train model
+      - name: Train and evaluate model
         run: |
-          echo Training model ....
-      - name: Create CML report
+          poetry run python -m app.evaluation.eval_lr
+      - name: Create report
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Post reports as comments in GitHub PRs
-          echo "# Report" >> report.md
-          echo "## Results" >> report.md
+          echo "# Results" >> report.md
+          echo "## Classification Report" >> report.md
+          cat data/output/classification_report.md >> report.md
+          echo "## Confusion Matrix" >> report.md
+          cml-publish data/output/confusion_matrix.png --md >> report.md
           cml send-comment report.md
