@@ -1,4 +1,4 @@
-name: update-features
+name: update-features-v2
 on:
   workflow_dispatch:
     inputs:
