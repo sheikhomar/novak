@@ -33,7 +33,6 @@ jobs:
         env:
           GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
         run: |
-          poetry run dvc unprotect data/input/processed/*.npz
           poetry run python -m app.data.prep_agnews
           poetry run dvc add data/input/processed/*.npz
       - name: Update DVC files in Git and DVC
